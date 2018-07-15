@@ -1,0 +1,26 @@
+server {
+	listen 8096;
+	listen [::]:8096;
+
+	access_log /var/jasmine/jasmine/log/sym_nginx_access.log;
+	error_log  /var/jasmine/jasmine/log/sym_nginx_error.log;
+
+	root /var/jasmine/jasmine/apps/sym/public;
+
+	index index.php index.html index.htm index.nginx-debian.html;
+
+	server_name _;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass unix:/var/run/php/php7.2-fpm-jasmine.sock;
+	}
+
+	location ~ /\.ht {
+		deny all;
+	}
+}
